@@ -1,0 +1,39 @@
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.widget import Widget
+from kivy.graphics import Line
+ 
+ 
+class DrawingWidget(Widget):
+    def on_touch_down(self, touch):
+        with self.canvas:
+            touch.ud["line"] = Line(points=(touch.x, touch.y), width=2)
+ 
+    def on_touch_move(self, touch):
+        touch.ud["line"].points += (touch.x, touch.y)
+ 
+ 
+class DrawingApp(App):
+    def build(self):
+        self.title = 'Блокнот с рисованием Kivy Глущенко'
+        self.layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
+ 
+        # Виджет для рисования
+        self.drawing_widget = DrawingWidget()
+        self.layout.add_widget(self.drawing_widget)
+ 
+        # Кнопка для очистки рисунка
+        clear_button = Button(text='Очистить', on_press=self.clear_drawing)
+        self.layout.add_widget(clear_button)
+ 
+        return self.layout
+ 
+    def clear_drawing(self, instance):
+        # Очистка рисунка
+        self.drawing_widget.canvas.clear()
+ 
+ 
+if __name__ == '__main__':
+    DrawingApp().run()
